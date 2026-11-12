@@ -1,14 +1,35 @@
 import ../Zest2D/core
+import ../Zest2D/juice
 import raylib
 
-var x: int32 = 10
-var y: int32 = 10
+type
+  Player = object
+    pos: Vector2
+
+var player = Player(pos: Vector2(x: 100.0, y: 100.0))
 
 proc Update(dt: float32) =
-    x += 10
-    y += 10
+    var speed: float32 = 300
+    if isKeyDown(Right): player.pos.x += speed * dt
+    if isKeyDown(Left):  player.pos.x -= speed * dt
+    if isKeyDown(Down):  player.pos.y += speed * dt
+    if isKeyDown(Up):    player.pos.y -= speed * dt
+    if isKeyPressed(Space): 
+        shake(player.pos, 30.0, 30.0, 0.4)
+
+    setCameraFollow(player.pos, smoothing = 8.0)
 
 proc Draw() =
-    drawRectangle(x, y, 10, 10, Red)
+    drawRectangle(
+        player.pos, 
+        Vector2(x: 10.0, y: 10.0), 
+        Red
+    )
+
+    drawRectangle(
+        Vector2(x: 40, y: 10), 
+        Vector2(x: 10.0, y: 10.0), 
+        Blue
+    )
 
 initZest2D(800, 600, "Zest2D Test Window", Update, Draw)
