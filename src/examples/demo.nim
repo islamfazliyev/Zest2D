@@ -1,5 +1,6 @@
 import ../Zest2D/core
 import ../Zest2D/juice
+import ../Zest2D/input
 import raylib
 
 type
@@ -10,13 +11,16 @@ var player = Player(pos: Vector2(x: 100.0, y: 100.0))
 
 proc Update(dt: float32) =
     var speed: float32 = 300
-    if isKeyDown(Right): player.pos.x += speed * dt
-    if isKeyDown(Left):  player.pos.x -= speed * dt
-    if isKeyDown(Down):  player.pos.y += speed * dt
-    if isKeyDown(Up):    player.pos.y -= speed * dt
-    if isKeyPressed(Space): 
-        shake(player.pos, 30.0, 30.0, 0.4)
+    if input.isKeyDown(Key.Right): player.pos.x += speed * dt
+    if input.isKeyDown(Key.Left):  player.pos.x -= speed * dt
+    if input.isKeyDown(Key.Down):  player.pos.y += speed * dt
+    if input.isKeyDown(Key.Up):    player.pos.y -= speed * dt
+    if input.isKeyDown(Key.Space): 
+        shake(player.pos, 30.0, 30.0, 0.3)
+        #shake(mainCamera.offset, 30.0, 30.0, 0.3)
+    
 
+    mainCamera.zoom = 5.0
     setCameraFollow(player.pos, smoothing = 8.0)
 
 proc Draw() =
