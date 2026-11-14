@@ -1,4 +1,5 @@
 import raylib
+import math
 import std/random
 randomize()
 
@@ -11,7 +12,26 @@ type
         trauma: float32
         decay: float32
 
+type 
+    SquashInstance = object
+        target: ptr Vector2
+        baseScale: Vector2
+        amountX: float32
+        amountY: float32
+        ping: float32
+        pong: float32
+
+type 
+    FlashInstance = object
+        target: ptr Color
+        baseColor: Color
+        flashColor: Color
+        ping: float32
+        pong: float32
+
 var activeShakes: seq[ShakeInstance] = @[]
+var activeSquashes: seq[SquashInstance] = @[]
+var activeFlashes: seq[FlashInstance] = @[]
 
 proc shake*(
     targetObj: var Vector2,
@@ -29,14 +49,49 @@ proc shake*(
         decay: 1.0 / duration
     ))
 
+proc squash*(
+    targetObj: var Vector2,
+    squashAmountX: float32,
+    squashAmountY: float32,
+    duration: float32 = 0.3,
+
+) =
+    activeSquashes.add(SquashInstance(
+        target: addr targetObj,
+        baseScale: targetObj,
+        amountX: squashAmountX,
+        amountY: squashAmountY,
+        ping: 1.0,
+        pong: 1.0 / duration,
+        
+    ))
+
+proc flash*(
+    targetObj: var Color,
+    flashColor: Color,
+    duration: float32 = 0.3,
+
+) =
+    activeFlashes.add(FlashInstance(
+        target: addr targetObj,
+        baseColor: targetObj,
+        flashColor: flashColor,
+        ping: 1.0,
+        pong: 1.0 / duration,
+        
+    ))
+
 
 proc updateJuice*(dt: float32) =
     var i = activeShakes.high
+    var s = activeSquashes.high
+    var f = activeFlashes.high
     while i >= 0:
         activeShakes[i].target[].x = activeShakes[i].basePos.x
         activeShakes[i].target[].y = activeShakes[i].basePos.y
 
         activeShakes[i].trauma -= activeShakes[i].decay * dt
+
 
         if activeShakes[i].trauma <= 0.0:
             activeShakes.del(i)
@@ -48,6 +103,40 @@ proc updateJuice*(dt: float32) =
 
             activeShakes[i].target[].x += activeShakes[i].amountX * shakePower * dirX
             activeShakes[i].target[].y += activeShakes[i].amountY * shakePower * dirY
-        
+                    
         dec(i)
+    
+    while s >= 0:
+        activeSquashes[s].target[].x = activeSquashes[s].baseScale.x
+        activeSquashes[s].target[].y = activeSquashes[s].baseScale.y
+
+        activeSquashes[s].ping -= activeSquashes[s].pong * dt
+        
+        if activeSquashes[s].ping <= 0:
+            activeSquashes.del(s)
+        else:
+            let progress = 1.0 - activeSquashes[s].ping
+            let curve = arch(progress)
+            activeSquashes[s].target[].x += activeSquashes[s].amountX * curve
+            activeSquashes[s].target[].y += activeSquashes[s].amountY * curve
+        
+        dec(s)
+    
+    while f >= 0:
+        activeFlashes[f].target[] = activeFlashes[f].baseColor
+
+        activeFlashes[f].ping -= activeFlashes[f].pong * dt
+
+        if activeFlashes[f].ping <= 0:
+            activeFlashes.del(f)
+        else:
+            let progress = 1.0 - activeFlashes[f].ping
+            let curve = arch(progress)
+            
+            if curve > 0.50 and curve < 0.70:
+                activeFlashes[f].target[] = activeFlashes[f].flashColor
+            else:
+                activeFlashes[f].target[] = activeFlashes[f].baseColor 
+        
+        dec(f)
     
