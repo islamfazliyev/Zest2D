@@ -4,6 +4,7 @@ import ../Zest2D/input
 import ../Zest2D/graphics
 import ../Zest2D/ui
 import ../Zest2D/types
+import ../Zest2D/math
 
 type
   Player = object
@@ -11,13 +12,23 @@ type
     scale: Vector2
     color: Color
 
+type
+  Obstacle = object
+    pos: Vector2
+    scale: Vector2
+    color: Color
+
 var player = Player(pos: Vector2(x: 100.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: Red)
+var obstacle1 = Obstacle(pos: Vector2(x: 150.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: DarkGray)
 var stamina: int32 = 200
 
 proc Update(dt: float32) =
     var speed: float32 = 100
     var dirX: int32 = 0
     var dirY: int32 = 0
+    let oldPos = player.pos
+
+    
     if input.isKeyDown(Key.Right): 
         player.pos.x += speed * dt 
         dirX = 1
@@ -41,6 +52,10 @@ proc Update(dt: float32) =
         shakeCamera(10.0, 10.0, 0.2)
         stamina -= 10
     
+    if overlaps(player.pos, player.scale, obstacle1.pos, obstacle1.scale):
+        player.pos = oldPos
+        
+
     setCameraZoom(5.0)
     setCameraFollow(player.pos, smoothing = 8.0)
 
@@ -49,6 +64,12 @@ proc Draw() =
         player.pos, 
         player.scale, 
         player.color
+    )
+
+    graphics.drawRectangle(
+        obstacle1.pos, 
+        obstacle1.scale, 
+        obstacle1.color
     )
 
     graphics.drawRectangle(
@@ -69,12 +90,13 @@ proc Draw() =
         Yellow
     )
 
+
 proc drawUi() =
     ui.drawRectangle(10, 10, stamina, 30, Blue)
 
-    let button = drawButton("PLAY", Vector2(x: 300, y: 250), Vector2(x: 200, y: 50))
+    # let button = drawButton("PLAY", Vector2(x: 300, y: 250), Vector2(x: 200, y: 50))
 
-    if button.isClicked:
-        echo "hello world"
+    # if button.isClicked:
+    #     echo "hello world"
 
 initZest2D(800, 600, "Zest2D Test Window", Update, Draw, drawUi)
