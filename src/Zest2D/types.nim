@@ -19,3 +19,5 @@ const
   Green* = rgba(0, 228, 48)
   Blue*  = rgba(0, 121, 241)
   Yellow*  = rgba(255, 255, 0)
+  Gray*     = rgba(130, 130, 130)
+  DarkGray* = rgba(80, 80, 80)

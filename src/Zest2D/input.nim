@@ -1,4 +1,6 @@
 import raylib
+import types
+import helpers
 
 type
   Key* {.pure.} = enum
@@ -134,6 +136,16 @@ type
     RightSuper = 347
     KbMenu = 348
 
+type
+  MouseButton* {.pure.} = enum
+    Left = 0
+    Right = 1
+    Middle = 2
+    Side = 3
+    Extra = 4
+    Forward = 5
+    Back = 6
+
 proc isKeyDown*(key: Key): bool {.inline.} =
     raylib.isKeyDown(raylib.KeyboardKey(ord(key)))
         
@@ -154,3 +166,26 @@ proc setExitKey*(key: Key) {.inline.} =
 
 proc getKeyPressed*(): Key {.inline.} =
   Key(ord(raylib.getKeyPressed()))
+
+proc getMousePosition*(): types.Vector2 =
+    let pos = raylib.getMousePosition()
+    types.Vector2(x: pos.x, y: pos.y)
+
+proc isMouseButtonPressed*(button: MouseButton): bool {.inline.} =
+  raylib.isMouseButtonPressed(raylib.MouseButton(ord(button)))
+
+proc isMouseButtonDown*(button: MouseButton): bool {.inline.} =
+  raylib.isMouseButtonDown(raylib.MouseButton(ord(button)))
+
+proc isMouseButtonReleased*(button: MouseButton): bool {.inline.} =
+  raylib.isMouseButtonReleased(raylib.MouseButton(ord(button)))
+
+proc isMouseButtonUp*(button: MouseButton): bool {.inline.} =
+  raylib.isMouseButtonUp(raylib.MouseButton(ord(button)))
+
+proc getMouseDelta*(): types.Vector2 {.inline.} =
+  let delta = raylib.getMouseDelta()
+  types.Vector2(x: delta.x, y: delta.y)
+
+proc getMouseWheelMove*(): float32 {.inline.} =
+  raylib.getMouseWheelMove()

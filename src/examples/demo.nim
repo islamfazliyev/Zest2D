@@ -43,7 +43,7 @@ proc Update(dt: float32) =
     
     setCameraZoom(5.0)
     setCameraFollow(player.pos, smoothing = 8.0)
-    
+
 proc Draw() =
     graphics.drawRectangle(
         player.pos, 
@@ -71,5 +71,10 @@ proc Draw() =
 
 proc drawUi() =
     ui.drawRectangle(10, 10, stamina, 30, Blue)
+
+    let button = drawButton("PLAY", Vector2(x: 300, y: 250), Vector2(x: 200, y: 50))
+
+    if button.isClicked:
+        echo "hello world"
 
 initZest2D(800, 600, "Zest2D Test Window", Update, Draw, drawUi)
