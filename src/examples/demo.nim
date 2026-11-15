@@ -1,6 +1,8 @@
 import ../Zest2D/core
 import ../Zest2D/juice
 import ../Zest2D/input
+import ../Zest2D/graphics
+import ../Zest2D/ui
 import raylib
 
 type
@@ -10,6 +12,7 @@ type
     color: Color
 
 var player = Player(pos: Vector2(x: 100.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: Red)
+var stamina: int32 = 200
 
 proc Update(dt: float32) =
     var speed: float32 = 100
@@ -28,7 +31,7 @@ proc Update(dt: float32) =
         player.pos.y -= speed * dt
         dirY = -1
 
-    if input.isKeyPressed(Key.Space): 
+    if input.isKeyPressed(Key.Space) and stamina > 0: 
         if dirX == 1: player.pos.x += 40
         if dirX == -1: player.pos.x -= 40
         if dirY == -1: player.pos.y -= 40
@@ -36,32 +39,38 @@ proc Update(dt: float32) =
         flash(player.color, Green, 0.3)
         squash(player.scale, -10, -10, 0.2)
         shake(mainCamera.offset, 10.0, 10.0, 0.2)
+        stamina -= 10
     
 
     mainCamera.zoom = 5.0
     setCameraFollow(player.pos, smoothing = 8.0)
 
 proc Draw() =
-    drawRectangle(
+    graphics.drawRectangle(
         player.pos, 
         player.scale, 
         player.color
     )
 
-    drawRectangle(
+    graphics.drawRectangle(
         Vector2(x: 40, y: 10), 
         Vector2(x: 10.0, y: 10.0), 
         Blue
     )
-    drawRectangle(
+
+    graphics.drawRectangle(
         Vector2(x: 60, y: 10), 
         Vector2(x: 10.0, y: 10.0), 
         Green
     )
-    drawRectangle(
+
+    graphics.drawRectangle(
         Vector2(x: 80, y: 10), 
         Vector2(x: 10.0, y: 10.0), 
         Yellow
     )
 
-initZest2D(800, 600, "Zest2D Test Window", Update, Draw)
+proc drawUi() =
+    ui.drawRectangle(10, 10, stamina, 30, Blue)
+
+initZest2D(800, 600, "Zest2D Test Window", Update, Draw, drawUi)

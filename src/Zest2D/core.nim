@@ -34,7 +34,9 @@ proc initZest2D*(
   screenHeight: int32, 
   name: string,
   update: proc(dt: float32), # Update callback (gets dt)
-  draw: proc()               # Draw callback
+  draw: proc(),               # Draw callback
+  drawUi: proc() = nil,               # Draw ui callback
+  backgroundClear: Color = White,
 ) =
     initWindow(screenWidth, screenHeight, name)
     setTargetFPS(60)
@@ -53,11 +55,13 @@ proc initZest2D*(
             mainCamera.target.y = lerp(mainCamera.target.y, cameraTarget.y, factor)
 
         beginDrawing()
-        clearBackground(RayWhite)
+        clearBackground(backgroundClear)
         beginMode2D(mainCamera)
         if not draw.isNil:
             draw()
         endMode2D()
+        if not drawUi.isNil:
+            drawUi()
         endDrawing()
     closeWindow()
 
