@@ -3,7 +3,7 @@ import ../Zest2D/juice
 import ../Zest2D/input
 import ../Zest2D/graphics
 import ../Zest2D/ui
-import raylib
+import ../Zest2D/types
 
 type
   Player = object
@@ -38,13 +38,12 @@ proc Update(dt: float32) =
         if dirY == 1: player.pos.y += 40
         flash(player.color, Green, 0.3)
         squash(player.scale, -10, -10, 0.2)
-        shake(mainCamera.offset, 10.0, 10.0, 0.2)
+        shakeCamera(10.0, 10.0, 0.2)
         stamina -= 10
     
-
-    mainCamera.zoom = 5.0
+    setCameraZoom(5.0)
     setCameraFollow(player.pos, smoothing = 8.0)
-
+    
 proc Draw() =
     graphics.drawRectangle(
         player.pos, 

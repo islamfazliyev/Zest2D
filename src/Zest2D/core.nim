@@ -1,26 +1,35 @@
 import raylib
 import math
 import juice
+import types
+import helpers
 
 var mainCamera* = Camera2D(
-    target: Vector2(x: 0, y: 0),
-    offset: Vector2(x: 0, y: 0),
+    target: types.Vector2(x: 0, y: 0),
+    offset: types.Vector2(x: 0, y: 0),
     rotation: 0.0,
     zoom: 1.0
 )
 
-var cameraTarget*: Vector2 = Vector2(x: 0, y: 0)
+var cameraTarget*: types.Vector2 = types.Vector2(x: 0, y: 0)
+var cameraShakeOffset: types.Vector2 = types.Vector2(x: 0, y: 0)
 var useCameraFollow*: bool = false
 var cameraSmoothing*: float32 = 8.0
 
-proc setCameraFollow*(target: Vector2, smoothing: float32 = 8.0) =
+proc setCameraFollow*(target: types.Vector2, smoothing: float32 = 8.0) =
     cameraTarget = target
     cameraSmoothing = smoothing
     useCameraFollow = true
 
+proc setCameraZoom*(zoom: float32) =
+    mainCamera.zoom = zoom
+
+proc shakeCamera*(amountX, amountY: float32, duration: float32 = 0.3) =
+    shake(cameraShakeOffset, amountX, amountY, duration)
+
 proc initCamera2D*(
-    target: Vector2 = Vector2(x: 0, y: 0),
-    offset: Vector2 = Vector2(x: 0, y: 0),
+    target: types.Vector2 = types.Vector2(x: 0, y: 0),
+    offset: types.Vector2 = types.Vector2(x: 0, y: 0),
     rotation: float32 = 0.0,
     zoom: float32 = 3.0
 ) =
@@ -36,11 +45,11 @@ proc initZest2D*(
   update: proc(dt: float32), # Update callback (gets dt)
   draw: proc(),               # Draw callback
   drawUi: proc() = nil,               # Draw ui callback
-  backgroundClear: Color = White,
+  backgroundClear: types.Color = White,
 ) =
     initWindow(screenWidth, screenHeight, name)
     setTargetFPS(60)
-    mainCamera.offset = Vector2(x: screenWidth.float32 / 2.0, y: screenHeight.float32 / 2.0)
+    mainCamera.offset = types.Vector2(x: screenWidth.float32 / 2.0, y: screenHeight.float32 / 2.0)
     while not windowShouldClose():
         let dt = getFrameTime()
 

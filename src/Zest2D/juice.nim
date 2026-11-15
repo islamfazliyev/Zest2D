@@ -1,5 +1,5 @@
-import raylib
 import math
+import types
 import std/random
 randomize()
 
