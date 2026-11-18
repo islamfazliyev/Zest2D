@@ -5,6 +5,7 @@ import ../Zest2D/graphics
 import ../Zest2D/ui
 import ../Zest2D/types
 import ../Zest2D/math
+import ../Zest2D/audio
 
 type
   Player = object
@@ -31,6 +32,8 @@ var stamina: int32 = 200
 var 
     shieldAngle: float32 = 0.0
     shieldPos: Vector2
+
+let sound = "src/examples/pickupCoin.wav"
 
 proc Update(dt: float32) =
     var speed: float32 = 100
@@ -61,6 +64,8 @@ proc Update(dt: float32) =
         squash(player.scale, -10, -10, 0.2)
         shakeCamera(10.0, 10.0, 0.2)
         stamina -= 10
+        playAudioOnce(sound)
+
     
     if overlaps(player.pos, player.scale, obstacle1.pos, obstacle1.scale):
         player.pos = oldPos

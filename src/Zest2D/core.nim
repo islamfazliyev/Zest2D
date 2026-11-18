@@ -3,6 +3,7 @@ import math
 import juice
 import types
 import helpers
+import audio
 
 var mainCamera* = Camera2D(
     target: types.Vector2(x: 0, y: 0),
@@ -49,6 +50,7 @@ proc initZest2D*(
   backgroundClear: types.Color = White,
 ) =
     initWindow(screenWidth, screenHeight, name)
+    initAudioDevice()
     setTargetFPS(60)
     let baseOffset = types.Vector2(x: screenWidth.float32 / 2.0, y: screenHeight.float32 / 2.0)
     mainCamera.offset = baseOffset
@@ -60,6 +62,7 @@ proc initZest2D*(
             update(dt)
 
         updateJuice(dt)
+        updateAudio()
 
         if useCameraFollow:
             let factor = min(1.0, cameraSmoothing * dt)
@@ -78,5 +81,7 @@ proc initZest2D*(
         if not drawUi.isNil:
             drawUi()
         endDrawing()
+    audio.clear()
+    closeAudioDevice()
     closeWindow()
 
