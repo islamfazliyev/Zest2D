@@ -12,6 +12,9 @@ type
 proc drawRectangle*(x, y, w, h: int32, color: types.Color = White) =
   raylib.drawRectangle(x, y, w, h, color)
 
+proc drawRectangleLines*(rect: types.Rectangle, lineThick: float32, color: types.Color = White) =
+  raylib.drawRectangleLines(rect, lineThick, color)
+
 proc drawCircle*(x, y: int32, radius: float32, color: types.Color = White) =
   raylib.drawCircle(x, y, radius, color)
 

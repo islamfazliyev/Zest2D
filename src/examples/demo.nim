@@ -9,8 +9,8 @@ import ../Zest2D/audio
 
 type
   Player = object
-    pos: Vector2
-    scale: Vector2
+    rect: Rectangle
+    rotation: float32
     color: Color
 
 type
@@ -25,8 +25,8 @@ type
     scale: Vector2
     color: Color
 
-var player = Player(pos: Vector2(x: 100.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: Red)
-var shield = Player(pos: Vector2(x: 80.0, y: 80.0), scale: Vector2(x: 10.0, y: 10.0), color: Blue)
+var player = Player(rect: Rectangle(pos: Vector2(x: 100, y: 100), scale: Vector2(x: 10, y: 10)), rotation: 0.0, color: Red)
+var shield = Shield(pos: Vector2(x: 80.0, y: 80.0), scale: Vector2(x: 10.0, y: 10.0), color: Blue)
 var obstacle1 = Obstacle(pos: Vector2(x: 150.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: DarkGray)
 var stamina: int32 = 3000
 var 
@@ -39,56 +39,59 @@ proc Update(dt: float32) =
     var speed: float32 = 100
     var dirX: int32 = 0
     var dirY: int32 = 0
-    let oldPos = player.pos
+    let oldPos = player.rect.pos
+    
 
     
     if input.isKeyDown(Key.Right): 
-        player.pos.x += speed * dt 
+        player.rect.pos.x += speed * dt 
         dirX = 1
     if input.isKeyDown(Key.Left):  
-        player.pos.x -= speed * dt
+        player.rect.pos.x -= speed * dt
         dirX = -1
     if input.isKeyDown(Key.Down):  
-        player.pos.y += speed * dt
+        player.rect.pos.y += speed * dt
         dirY = 1
     if input.isKeyDown(Key.Up):    
-        player.pos.y -= speed * dt
+        player.rect.pos.y -= speed * dt
         dirY = -1
 
     if input.isKeyPressed(Key.Space) and stamina > 0: 
-        if dirX == 1: player.pos.x += 40
-        if dirX == -1: player.pos.x -= 40
-        if dirY == -1: player.pos.y -= 40
-        if dirY == 1: player.pos.y += 40
+        if dirX == 1: player.rect.pos.x += 40
+        if dirX == -1: player.rect.pos.x -= 40
+        if dirY == -1: player.rect.pos.y -= 40
+        if dirY == 1: player.rect.pos.y += 40
         flash(player.color, Green, 0.3)
-        squash(player.scale, -10, -10, 0.2)
+        squash(player.rect.scale, -10, -10, 0.2)
         shakeCamera(10.0, 10.0, 0.2)
         stamina -= 10
         playAudioOnce(sound)
 
     
-    if overlaps(player.pos, player.scale, obstacle1.pos, obstacle1.scale):
-        player.pos = oldPos
+    if overlaps(player.rect.pos, player.rect.scale, obstacle1.pos, obstacle1.scale):
+        player.rect.pos = oldPos
 
     shieldAngle += 4.0 * dt
     let radius: float32 = 18.0
     let center = Vector2(
-        x: player.pos.x + 10 / 2.0,
-        y: player.pos.y + 10 / 2.0
+        x: player.rect.pos.x + 10 / 2.0,
+        y: player.rect.pos.y + 10 / 2.0
     )
 
     shield.pos.x = center.x + cos(shieldAngle) * radius
     shield.pos.y = center.y + sin(shieldAngle) * radius
 
     setCameraZoom(5.0)
-    setCameraFollow(player.pos, smoothing = 8.0)
+    setCameraFollow(player.rect.pos, smoothing = 8.0)
 
 proc Draw() =
     
-    graphics.drawRectangle(
-        player.pos, 
-        player.scale, 
-        player.color
+    graphics.drawOutlinedRectangle(
+        player.rect,
+        player.rotation,
+        player.color,
+        rgba(255, 186, 76, 255),
+        1.0
     )
 
     graphics.drawCircle(

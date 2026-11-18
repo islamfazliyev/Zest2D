@@ -10,6 +10,10 @@ type
     b*: uint8
     a*: uint8
 
+  Rectangle* = object
+    pos*: Vector2
+    scale*: Vector2
+
 proc rgba*(r, g, b: uint8, a: uint8 = 255): Color {.inline.} =
   Color(r: r, g: g, b: b, a: a)
 

@@ -6,5 +6,6 @@ import Zest2D/juice
 import Zest2D/math
 import Zest2D/types
 import Zest2D/ui
+import Zest2D/audio
 
-export core, graphics, helpers, input, juice, math, types, ui
+export core, graphics, helpers, input, juice, math, types, ui, audio
