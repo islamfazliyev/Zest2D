@@ -28,7 +28,7 @@ type
 var player = Player(pos: Vector2(x: 100.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: Red)
 var shield = Player(pos: Vector2(x: 80.0, y: 80.0), scale: Vector2(x: 10.0, y: 10.0), color: Blue)
 var obstacle1 = Obstacle(pos: Vector2(x: 150.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: DarkGray)
-var stamina: int32 = 200
+var stamina: int32 = 3000
 var 
     shieldAngle: float32 = 0.0
     shieldPos: Vector2

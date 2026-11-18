@@ -26,8 +26,7 @@ type
         target: ptr Color
         baseColor: Color
         flashColor: Color
-        ping: float32
-        pong: float32
+        timer: float32
 
 var activeShakes: seq[ShakeInstance] = @[]
 var activeSquashes: seq[SquashInstance] = @[]
@@ -40,6 +39,14 @@ proc shake*(
     duration: float32 = 0.3,
 
 ) =
+    for s in activeShakes.mitems:
+        if s.target == addr targetObj:
+            s.amountX = shakeAmountX
+            s.amountY = shakeAmountY
+            s.trauma = 1.0
+            s.decay = 1.0 / duration
+            return
+
     activeShakes.add(ShakeInstance(
         target: addr targetObj,
         basePos: targetObj,
@@ -56,6 +63,13 @@ proc squash*(
     duration: float32 = 0.3,
 
 ) =
+    for s in activeSquashes.mitems:
+        if s.target == addr targetObj:
+            s.amountX = squashAmountX
+            s.amountY = squashAmountY
+            s.ping = 1.0
+            s.pong = 1.0 / duration
+            return
     activeSquashes.add(SquashInstance(
         target: addr targetObj,
         baseScale: targetObj,
@@ -72,12 +86,17 @@ proc flash*(
     duration: float32 = 0.3,
 
 ) =
+    for f in activeFlashes.mitems:
+        if f.target == addr targetObj:
+            f.flashColor = flashColor
+            f.timer = duration
+            return
+
     activeFlashes.add(FlashInstance(
         target: addr targetObj,
         baseColor: targetObj,
         flashColor: flashColor,
-        ping: 1.0,
-        pong: 1.0 / duration,
+        timer: duration
         
     ))
 
@@ -107,6 +126,7 @@ proc updateJuice*(dt: float32) =
         dec(i)
     
     while s >= 0:
+        
         activeSquashes[s].target[].x = activeSquashes[s].baseScale.x
         activeSquashes[s].target[].y = activeSquashes[s].baseScale.y
 
@@ -123,20 +143,13 @@ proc updateJuice*(dt: float32) =
         dec(s)
     
     while f >= 0:
-        activeFlashes[f].target[] = activeFlashes[f].baseColor
+        activeFlashes[f].timer -= dt
 
-        activeFlashes[f].ping -= activeFlashes[f].pong * dt
-
-        if activeFlashes[f].ping <= 0:
+        if activeFlashes[f].timer <= 0.0:
+            activeFlashes[f].target[] = activeFlashes[f].baseColor
             activeFlashes.del(f)
         else:
-            let progress = 1.0 - activeFlashes[f].ping
-            let curve = arch(progress)
-            
-            if curve > 0.50 and curve < 0.70:
-                activeFlashes[f].target[] = activeFlashes[f].flashColor
-            else:
-                activeFlashes[f].target[] = activeFlashes[f].baseColor 
-        
+            activeFlashes[f].target[] = activeFlashes[f].flashColor
+
         dec(f)
     
