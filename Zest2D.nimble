@@ -13,7 +13,3 @@ bin           = @["Zest2D"]
 
 requires "nim >= 2.4.0"
 requires "naylib >= 4.6.0"
-
-# Executables
-
-bin           = @["examples/demo"]

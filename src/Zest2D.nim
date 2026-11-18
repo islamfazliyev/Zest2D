@@ -1,7 +1,10 @@
-# This is just an example to get you started. A typical hybrid package
-# uses this file as the main entry point of the application.
+import Zest2D/core
+import Zest2D/graphics
+import Zest2D/helpers
+import Zest2D/input
+import Zest2D/juice
+import Zest2D/math
+import Zest2D/types
+import Zest2D/ui
 
-import Zest2D/submodule
-
-when isMainModule:
-  echo(getWelcomeMessage())
+export core, graphics, helpers, input, juice, math, types, ui

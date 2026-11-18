@@ -25,6 +25,7 @@ proc setCameraZoom*(zoom: float32) =
     mainCamera.zoom = zoom
 
 proc shakeCamera*(amountX, amountY: float32, duration: float32 = 0.3) =
+    cameraShakeOffset = types.Vector2(x: 0, y: 0)
     shake(cameraShakeOffset, amountX, amountY, duration)
 
 proc initCamera2D*(
@@ -49,7 +50,9 @@ proc initZest2D*(
 ) =
     initWindow(screenWidth, screenHeight, name)
     setTargetFPS(60)
-    mainCamera.offset = types.Vector2(x: screenWidth.float32 / 2.0, y: screenHeight.float32 / 2.0)
+    let baseOffset = types.Vector2(x: screenWidth.float32 / 2.0, y: screenHeight.float32 / 2.0)
+    mainCamera.offset = baseOffset
+    
     while not windowShouldClose():
         let dt = getFrameTime()
 
@@ -62,6 +65,9 @@ proc initZest2D*(
             let factor = min(1.0, cameraSmoothing * dt)
             mainCamera.target.x = lerp(mainCamera.target.x, cameraTarget.x, factor)
             mainCamera.target.y = lerp(mainCamera.target.y, cameraTarget.y, factor)
+
+        mainCamera.offset.x = baseOffset.x + cameraShakeOffset.x
+        mainCamera.offset.y = baseOffset.y + cameraShakeOffset.y
 
         beginDrawing()
         clearBackground(backgroundClear)

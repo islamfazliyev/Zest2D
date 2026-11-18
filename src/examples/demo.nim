@@ -13,14 +13,24 @@ type
     color: Color
 
 type
+  Shield = object
+    pos: Vector2
+    scale: Vector2
+    color: Color
+
+type
   Obstacle = object
     pos: Vector2
     scale: Vector2
     color: Color
 
 var player = Player(pos: Vector2(x: 100.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: Red)
+var shield = Player(pos: Vector2(x: 80.0, y: 80.0), scale: Vector2(x: 10.0, y: 10.0), color: Blue)
 var obstacle1 = Obstacle(pos: Vector2(x: 150.0, y: 100.0), scale: Vector2(x: 10.0, y: 10.0), color: DarkGray)
 var stamina: int32 = 200
+var 
+    shieldAngle: float32 = 0.0
+    shieldPos: Vector2
 
 proc Update(dt: float32) =
     var speed: float32 = 100
@@ -54,16 +64,32 @@ proc Update(dt: float32) =
     
     if overlaps(player.pos, player.scale, obstacle1.pos, obstacle1.scale):
         player.pos = oldPos
-        
+
+    shieldAngle += 4.0 * dt
+    let radius: float32 = 18.0
+    let center = Vector2(
+        x: player.pos.x + 10 / 2.0,
+        y: player.pos.y + 10 / 2.0
+    )
+
+    shield.pos.x = center.x + cos(shieldAngle) * radius
+    shield.pos.y = center.y + sin(shieldAngle) * radius
 
     setCameraZoom(5.0)
     setCameraFollow(player.pos, smoothing = 8.0)
 
 proc Draw() =
+    
     graphics.drawRectangle(
         player.pos, 
         player.scale, 
         player.color
+    )
+
+    graphics.drawCircle(
+        shield.pos, 
+        1, 
+        shield.color
     )
 
     graphics.drawRectangle(
