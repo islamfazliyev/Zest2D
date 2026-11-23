@@ -47,3 +47,16 @@ proc overlaps*(rect1, rect2: types.Rectangle): bool {.inline.} =
     rect1.pos.y < rect2.pos.y + rect2.scale.y and
     rect1.pos.y + rect1.scale.y > rect2.pos.y
 
+proc dot*(a, b: Vector2): float32 {.inline.} =
+  a.x * b.x + a.y * b.y
+
+proc direction*(fromPos, toPos: Vector2): Vector2 {.inline.} =
+  let dx = toPos.x - fromPos.x
+  let dy = toPos.y - fromPos.y
+  let len = sqrt(dx * dx + dy * dy)
+  if len == 0.0'f32:
+    return Vector2(x: 0.0'f32, y: 0.0'f32)
+  Vector2(x: dx / len, y: dy / len)
+
+proc directionFromAngle*(degrees: float32): Vector2 {.inline.} =
+  Vector2(x: cosDeg(degrees), y: sinDeg(degrees))
