@@ -40,9 +40,7 @@ proc Update(dt: float32) =
     var dirX: int32 = 0
     var dirY: int32 = 0
     let oldPos = player.rect.pos
-    
 
-    
     if input.isKeyDown(Key.Right): 
         player.rect.pos.x += speed * dt 
         dirX = 1

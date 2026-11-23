@@ -41,4 +41,9 @@ proc overlaps*(posA, sizeA, posB, sizeB: Vector2): bool {.inline.} =
     posA.y < posB.y + sizeB.y and
     posA.y + sizeA.y > posB.y
 
+proc overlaps*(rect1, rect2: types.Rectangle): bool {.inline.} =
+    rect1.pos.x < rect2.pos.x + rect2.scale.x and
+    rect1.pos.x + rect1.scale.x > rect2.pos.x and
+    rect1.pos.y < rect2.pos.y + rect2.scale.y and
+    rect1.pos.y + rect1.scale.y > rect2.pos.y
 
