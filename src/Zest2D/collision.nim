@@ -75,3 +75,26 @@ proc obbCollider*(a, b: OBB): bool =
 
 proc obbCollider*(rectA: types.Rectangle, rotA: float32, rectB: types.Rectangle, rotB: float32): bool {.inline.} =
   obbCollider(OBB(rect: rectA, rotation: rotA), OBB(rect: rectB, rotation: rotB))
+
+proc circleCollider*(a: CircleCol, b: OBB): bool {.inline.} =
+  let hw = b.rect.scale.x * 0.5'f32
+  let hh = b.rect.scale.y * 0.5'f32
+  let cx = b.rect.pos.x + hw
+  let cy = b.rect.pos.y + hh
+
+  let relX = a.pos.x - cx
+  let relY = a.pos.y - cy
+
+  let dir = directionFromAngle(-b.rotation)
+  let localX = relX * dir.x - relY * dir.y
+  let localY = relX * dir.y + relY * dir.x
+
+  let closestX = clamp(localX, -hw, hw)
+  let closestY = clamp(localY, -hh, hh)
+
+  let dx = localX - closestX
+  let dy = localY - closestY
+  (dx * dx + dy * dy) <= (a.radius * a.radius)
+
+proc circleCollider*(a: OBB, b: CircleCol): bool {.inline.} =
+  circleCollider(b, a)
