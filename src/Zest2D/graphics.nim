@@ -44,3 +44,16 @@ proc drawCircle*(x, y: int32, radius: float32, color: types.Color = White) =
 proc drawCircle*(pos: types.Vector2, radius: float32, color: types.Color = White) =
   raylib.drawCircle(pos, radius, color)
 
+proc drawTexture*(texture: types.Texture, source: types.Rectangle, dest: types.Rectangle, origin: types.Vector2, rotation: float32, color: types.Color) =
+  let rlTexPtr = cast[ptr raylib.Texture](unsafeAddr texture)
+  raylib.drawTexture(rlTexPtr[], source, dest, origin, rotation, color)
+
+proc drawTexture*(texture: types.Texture, dest: types.Rectangle, rotation: float32 = 0.0'f32, color: types.Color = White) =
+  let rlTexPtr = cast[ptr raylib.Texture](unsafeAddr texture)
+  let source = types.Rectangle(pos: types.Vector2(x: 0, y: 0), scale: types.Vector2(x: float32(texture.width), y: float32(texture.height)))
+  let origin = types.Vector2(x: dest.scale.x * 0.5'f32, y: dest.scale.y * 0.5'f32)
+  let centeredDest = types.Rectangle(
+    pos: types.Vector2(x: dest.pos.x + origin.x, y: dest.pos.y + origin.y),
+    scale: dest.scale
+  )
+  raylib.drawTexture(rlTexPtr[], source, centeredDest, origin, rotation, color)

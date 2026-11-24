@@ -9,3 +9,14 @@ converter toRlCol*(c: types.Color): raylib.Color {.inline.} =
 
 converter toRlCol*(r: types.Rectangle): raylib.Rectangle {.inline.} =
   raylib.Rectangle(x: r.pos.x, y: r.pos.y, width: r.scale.x, height: r.scale.y)
+
+
+
+converter toZestTexture*(t: raylib.Texture): types.Texture {.inline.} =
+  types.Texture(
+    id: t.id,
+    width: t.width,
+    height: t.height,
+    mipmaps: t.mipmaps,
+    format: int32(t.format)
+  )

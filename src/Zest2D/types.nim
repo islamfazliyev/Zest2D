@@ -1,4 +1,4 @@
-
+import raylib
 type
   Vector2* = object
     x*: float32
@@ -13,6 +13,13 @@ type
   Rectangle* = object
     pos*: Vector2
     scale*: Vector2
+
+  Texture* = object
+    id*: uint32
+    width*: int32
+    height*: int32
+    mipmaps*: int32
+    format*: int32
 
 proc rgba*(r, g, b: uint8, a: uint8 = 255): Color {.inline.} =
   Color(r: r, g: g, b: b, a: a)

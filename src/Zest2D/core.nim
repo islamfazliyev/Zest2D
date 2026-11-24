@@ -4,6 +4,7 @@ import juice
 import types
 import helpers
 import audio
+import textures
 
 var mainCamera* = Camera2D(
     target: types.Vector2(x: 0, y: 0),
@@ -83,5 +84,6 @@ proc initZest2D*(
         endDrawing()
     audio.clear()
     closeAudioDevice()
+    textures.clear()
     closeWindow()
 
