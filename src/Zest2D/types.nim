@@ -1,4 +1,3 @@
-import raylib
 type
   Vector2* = object
     x*: float32
@@ -20,6 +19,18 @@ type
     height*: int32
     mipmaps*: int32
     format*: int32
+  
+  SpriteAnimation* = object
+    texture*: Texture
+    frameWidth*: float32
+    frameHeight*: float32
+    frameCount*: int
+    columns*: int
+    fps*: float32
+    currentFrame*: int
+    timer*: float32
+    loop*: bool
+    finished*: bool
 
 proc rgba*(r, g, b: uint8, a: uint8 = 255): Color {.inline.} =
   Color(r: r, g: g, b: b, a: a)

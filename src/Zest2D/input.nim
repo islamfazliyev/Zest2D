@@ -1,6 +1,7 @@
 import raylib
 import types
 import helpers
+import core
 
 type
   Key* {.pure.} = enum
@@ -189,3 +190,6 @@ proc getMouseDelta*(): types.Vector2 {.inline.} =
 
 proc getMouseWheelMove*(): float32 {.inline.} =
   raylib.getMouseWheelMove()
+
+proc getMouseWorldPosition*(): types.Vector2 =
+    screenToWorld(getMousePosition())

@@ -30,6 +30,12 @@ proc shakeCamera*(amountX, amountY: float32, duration: float32 = 0.3) =
     cameraShakeOffset = types.Vector2(x: 0, y: 0)
     shake(cameraShakeOffset, amountX, amountY, duration)
 
+proc screenToWorld*(pos: types.Vector2): types.Vector2 =
+    getScreenToWorld2D(pos, mainCamera)
+
+proc worldToScreen*(pos: types.Vector2): types.Vector2 =
+    getWorldToScreen2D(pos, mainCamera)
+
 proc initCamera2D*(
     target: types.Vector2 = types.Vector2(x: 0, y: 0),
     offset: types.Vector2 = types.Vector2(x: 0, y: 0),

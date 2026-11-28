@@ -7,5 +7,9 @@ import Zest2D/math
 import Zest2D/types
 import Zest2D/ui
 import Zest2D/audio
+import Zest2D/collision
+import Zest2D/timer
+import Zest2D/textures
+import Zest2D/animation
 
-export core, graphics, helpers, input, juice, math, types, ui, audio
+export core, graphics, helpers, input, juice, math, types, ui, audio, collision, textures, timer, animation
